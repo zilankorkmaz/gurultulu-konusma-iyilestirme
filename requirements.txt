@@ -1,0 +1,13 @@
+# Python 3.10 veya 3.11 önerilir (DeepFilterNet 3.12+ ile sorun çıkarabiliyor)
+torch==2.0.1
+torchaudio==2.0.2
+deepfilternet==0.5.6
+numpy<2
+soundfile
+librosa
+pesq
+pystoi
+scipy
+pandas
+tabulate
+matplotlib

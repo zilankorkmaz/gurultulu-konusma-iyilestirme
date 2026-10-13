@@ -1,9 +1,12 @@
-<<<<<<< HEAD
+# Proje
 .venv/
 __pycache__/
 data/
 outputs/
-=======
+models/
+smoke/
+*.ckpt*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -224,4 +227,3 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
->>>>>>> bd3f62ec3ffc54b43c49b09d9ab64c6792f5a0cd
