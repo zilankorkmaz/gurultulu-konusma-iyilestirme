@@ -1,0 +1,399 @@
+/* ── Genel Sayfa Yapısı & Değişkenler ── */
+:root, .dark, [data-theme="dark"] {
+    --body-background-fill: #f1f5f9 !important;
+    --background-fill-primary: #ffffff !important;
+    --background-fill-secondary: #f8fafc !important;
+    --neutral-50: #f8fafc !important;
+    --neutral-100: #f1f5f9 !important;
+    --neutral-200: #e2e8f0 !important;
+    --neutral-800: #1e293b !important;
+    --neutral-900: #0f172a !important;
+    --block-background-fill: #ffffff !important;
+    --input-background-fill: #ffffff !important;
+    --border-color-primary: #e2e8f0 !important;
+    --checkbox-label-background-fill: #ffffff !important;
+    --checkbox-label-background-fill-selected: #eff6ff !important;
+    --checkbox-label-text-color: #0f172a !important;
+    --checkbox-label-text-color-selected: #1d4ed8 !important;
+}
+
+body, .gradio-container {
+    background: #f1f5f9 !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    color: #0f172a !important;
+}
+
+/* ── Hero Header ── */
+.header-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
+    border-radius: 18px;
+    padding: 36px 44px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.25), 0 8px 10px -6px rgba(30, 58, 138, 0.2);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.header-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+.header-icon-box {
+    width: 58px;
+    height: 58px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.9rem;
+    flex-shrink: 0;
+}
+.header-titles h1 {
+    color: #ffffff !important;
+    font-size: 1.85rem !important;
+    font-weight: 800 !important;
+    margin: 0 0 6px 0 !important;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+}
+.header-titles p {
+    color: #cbd5e1 !important;
+    font-size: 0.98rem !important;
+    margin: 0 !important;
+    font-weight: 400;
+}
+.header-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 4px;
+}
+.hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    padding: 5px 14px;
+    color: #f8fafc !important;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+
+
+/* ── Birleşik Kart Tasarımı (Header + İçerik Tek Parça) ── */
+.panel-card {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05) !important;
+    padding: 20px 22px !important;
+    margin-bottom: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+}
+.panel-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+.panel-card-icon {
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #2563eb;
+    flex-shrink: 0;
+}
+.panel-card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.3;
+}
+.panel-card-desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 2px 0 0 0;
+    line-height: 1.2;
+}
+
+/* ── Ses Yükleme (Dropzone) ── */
+.audio-uploader {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+.audio-uploader .upload-container,
+.audio-uploader [data-testid="dropzone"],
+.audio-uploader [data-testid="upload-box"] {
+    background: #f8fafc !important;
+    border: 2px dashed #94a3b8 !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    transition: all 0.2s ease !important;
+}
+.audio-uploader .upload-container:hover,
+.audio-uploader [data-testid="dropzone"]:hover,
+.audio-uploader [data-testid="upload-box"]:hover {
+    background: #f1f5f9 !important;
+    border-color: #64748b !important;
+}
+/* Dropzone iç metin ve ikon renkleri (Net Okunabilir Koyu Gri) */
+.audio-uploader,
+.audio-uploader *,
+.audio-uploader [data-testid="dropzone"] *,
+.audio-uploader [data-testid="upload-box"] *,
+.audio-uploader .upload-container *,
+.audio-uploader button,
+.audio-uploader span,
+.audio-uploader p {
+    color: #334155 !important;
+}
+.audio-uploader svg,
+.audio-uploader [data-testid="dropzone"] svg {
+    color: #334155 !important;
+    fill: #334155 !important;
+    stroke: #334155 !important;
+}
+
+/* ── Radyo Seçim Grubu (Karanlık Arka Planı Ez ve Kart Yap) ── */
+.method-radio-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+.method-radio-card .wrap,
+.method-radio-card div[data-testid="checkbox-group"] {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    background: transparent !important;
+}
+.method-radio-card label {
+    background: #f8fafc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 12px 14px !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    color: #1e293b !important;
+}
+.method-radio-card label:hover {
+    background: #f1f5f9 !important;
+    border-color: #93c5fd !important;
+    transform: translateY(-1px) !important;
+}
+.method-radio-card label.selected,
+.method-radio-card label:has(input:checked) {
+    background: #eff6ff !important;
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 1px #2563eb, 0 4px 10px rgba(37, 99, 235, 0.1) !important;
+}
+.method-radio-card label span,
+.method-radio-card label div,
+.method-radio-card span {
+    color: #0f172a !important;
+    font-size: 0.92rem !important;
+    font-weight: 600 !important;
+}
+.method-radio-card label.selected span,
+.method-radio-card label:has(input:checked) span {
+    color: #1d4ed8 !important;
+    font-weight: 700 !important;
+}
+.method-radio-card input[type="radio"] {
+    accent-color: #2563eb !important;
+    width: 17px !important;
+    height: 17px !important;
+    margin-right: 12px !important;
+}
+
+/* ── Parametre Slider (Mavi Fosforlu Başlığı Kaldır & Sayı Kutusunu Görünür Yap) ── */
+.slider-container {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+.slider-container label,
+.slider-container [data-testid="block-label"],
+.slider-container span.block {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+.slider-container label span,
+.slider-container [data-testid="block-label"] span {
+    background: transparent !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+/* Slider sayı giriş kutusu (1,5 rakamının net görünmesi) */
+.slider-container input[type="number"],
+.slider-container input[type="text"],
+.slider-container [data-testid="number-input"] {
+    color: #0f172a !important;
+    background: #ffffff !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    padding: 4px 8px !important;
+}
+/* Slider altındaki açıklama metni ve min/max değerleri */
+.slider-container span.info,
+.slider-container .info,
+.slider-container p,
+.slider-container [data-testid="range-slider-scale"],
+.slider-container .range-slider-scale,
+.slider-container span {
+    color: #334155 !important;
+    font-weight: 500 !important;
+}
+.slider-container input[type=range] {
+    accent-color: #2563eb !important;
+}
+
+/* ── Ana Çalıştır Butonu (Canlı Mavi Buton) ── */
+.run-btn {
+    background: #2563eb !important;
+    background-color: #2563eb !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    height: 52px !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
+    transition: all 0.2s ease !important;
+    width: 100% !important;
+    cursor: pointer !important;
+}
+.run-btn:hover {
+    background: #1d4ed8 !important;
+    background-color: #1d4ed8 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 22px rgba(37, 99, 235, 0.5) !important;
+}
+
+/* ── Durum Bildirim Kutusu (Görünürlük ve Kontrast Garantisi) ── */
+.status-box {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-left: 5px solid #2563eb !important;
+    border-radius: 12px !important;
+    padding: 14px 20px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+    margin-bottom: 14px !important;
+}
+.status-box,
+.status-box *,
+.status-box p,
+.status-box span,
+.status-box div,
+div[data-testid="markdown"].status-box * {
+    color: #0f172a !important;
+    font-size: 0.94rem !important;
+    line-height: 1.5 !important;
+}
+.status-box strong,
+div[data-testid="markdown"].status-box strong {
+    color: #1e3a8a !important;
+    font-weight: 700 !important;
+}
+
+/* ── Ses Kartı Başlıkları ve Varsayılan Mavi Rozetleri Temizleme ── */
+[data-testid="block-label"],
+.block-label,
+label.block,
+.audio-output-item label {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+[data-testid="block-label"] span,
+.block-label span {
+    background: transparent !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+/* Özel Şık Ses Başlık Çubuğu */
+.audio-track-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px 10px 4px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 8px;
+}
+.audio-track-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.audio-track-pill {
+    margin-left: auto;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+}
+.pill-blue   { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.pill-orange { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.pill-green  { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+
+/* ── Ses Çıktı Kartları (Yan Yana Çıktılar) ── */
+.audio-output-item {
+    background: #ffffff !important;
+    border-radius: 14px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 12px 14px !important;
+    transition: all 0.2s ease !important;
+}
+.audio-output-item:hover {
+    border-color: #cbd5e1 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+}
+.audio-card-spectral { border-top: 3px solid #2563eb !important; }
+.audio-card-wiener   { border-top: 3px solid #f59e0b !important; }
+.audio-card-deep     { border-top: 3px solid #10b981 !important; }
+
+/* ── Spektrogram Görselleştirme Çerçevesi ── */
+.plot-frame {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+}
+
+
