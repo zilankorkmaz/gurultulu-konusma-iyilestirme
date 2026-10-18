@@ -49,15 +49,27 @@ def build_interface():
             # ── SOL PANEL: Girdi ve Kontroller ──
             with gr.Column(scale=4, min_width=340):
 
-                # 1. Ses Girişi Kartı
+                # 1. Ses Girişi Kartı (Gürültülü Ses)
                 with gr.Group(elem_classes=["panel-card"]):
-                    gr.HTML(ui_comp.card_header("📁", "Ses Girişi", "Gürültülü ses dosyasını yükleyin veya mikrofonla kaydedin"))
+                    gr.HTML(ui_comp.card_header("📁", "1. Gürültülü Ses Girişi", "Gürültülü ses dosyasını yükleyin veya mikrofonla kaydedin"))
                     audio_input = gr.Audio(
                         sources=["upload", "microphone"],
                         type="filepath",
                         show_label=False,
                         elem_classes=["audio-uploader"]
                     )
+
+                # 2. Referans Temiz Ses Kartı (Metrik Ölçümü İçin)
+                with gr.Group(elem_classes=["panel-card"]):
+                    gr.HTML(ui_comp.card_header("🎯", "2. Referans Temiz Ses (Opsiyonel)", "PESQ, STOI ve SI-SDR puanlarını ölçmek için stüdyo kaydı / temiz ses"))
+                    ref_audio_input = gr.Audio(
+                        sources=["upload"],
+                        type="filepath",
+                        show_label=False,
+                        elem_classes=["audio-uploader"]
+                    )
+
+
 
                 # 2. Algoritma Seçimi Kartı
                 with gr.Group(elem_classes=["panel-card"]):
@@ -124,13 +136,18 @@ def build_interface():
                             gr.HTML(ui_comp.audio_track_header("🟢 DeepFilterNet", "Derin Öğrenme", "pill-green"))
                             audio_deepfilter = gr.Audio(show_label=False, interactive=False)
 
-                # Dalga Formu ve Spektrogram Görselleştirme Kartı
+                # 2. Nesnel Kalite Ölçütleri Kartı (PESQ, STOI, SI-SDR)
+                with gr.Group(elem_classes=["panel-card"]):
+                    gr.HTML(ui_comp.card_header("🏆", "Nesnel Kalite Ölçütleri", "Algoritmaların gürültü bastırma ve anlaşılabilirlik metrikleri"))
+                    metrics_output = gr.HTML(ui_comp.metrics_table_html({}))
+
+                # 3. Dalga Formu ve Spektrogram Görselleştirme Kartı
                 with gr.Group(elem_classes=["panel-card"]):
                     gr.HTML(ui_comp.card_header("📊", "Dalga Formu & Spektrogram Analizi", "Orijinal sinyal ile modellerin gürültü baskılama başarısının frekans-zaman karşılaştırması"))
                     plot_output = gr.Plot(show_label=False, elem_classes=["plot-frame"])
 
         # Pipeline eşleştirme ve çalıştırma
-        def map_and_run(audio, method, alpha):
+        def map_and_run(audio, ref_audio, method, alpha):
             method_map = {
                 "Tüm Modelleri Karşılaştır (A/B/C Analizi)": "Tümünü Karşılaştır",
                 "DeepFilterNet (Yapay Zeka / Derin Öğrenme)": "DeepFilterNet",
@@ -148,13 +165,18 @@ def build_interface():
                 else:
                     clean_method = "Tümünü Karşılaştır"
 
-            return process_audio_pipeline(audio, clean_method, alpha)
+            sp_out, wf_out, df_out, fig, status, m_dict = process_audio_pipeline(
+                audio, clean_method, alpha, ref_audio_input=ref_audio
+            )
+            m_html = ui_comp.metrics_table_html(m_dict)
+            return sp_out, wf_out, df_out, fig, status, m_html
 
         btn_process.click(
             fn=map_and_run,
-            inputs=[audio_input, method_radio, alpha_slider],
-            outputs=[audio_spectral, audio_wiener, audio_deepfilter, plot_output, status_box]
+            inputs=[audio_input, ref_audio_input, method_radio, alpha_slider],
+            outputs=[audio_spectral, audio_wiener, audio_deepfilter, plot_output, status_box, metrics_output]
         )
+
 
     return demo
 

@@ -21,6 +21,8 @@ from preprocess import TARGET_SAMPLE_RATE
 from spectral_subtraction import spectral_subtraction
 from wiener_filter import wiener_filter
 from visualization import create_comparison_plot
+from metrics import compute_metrics
+
 
 # DeepFilterNet için Lazy (Tembel) Model Yükleyici
 _DF_MODEL = None
@@ -129,17 +131,19 @@ def save_temp_wav(audio: np.ndarray, sr: int = TARGET_SAMPLE_RATE) -> str:
 def process_audio_pipeline(
     audio_input: Any,
     method: str = "Tümünü Karşılaştır",
-    alpha: float = 1.5
-) -> Tuple[Optional[str], Optional[str], Optional[str], Any, str]:
+    alpha: float = 1.5,
+    ref_audio_input: Optional[Any] = None
+) -> Tuple[Optional[str], Optional[str], Optional[str], Any, str, Dict[str, Dict[str, float]]]:
     """Tüm arayüz işlemlerini yürüten ana pipeline fonksiyonu.
 
     Args:
         audio_input: Dosya yolu veya mikrofon verisi.
         method: "Spektral Çıkarma", "Wiener Filtresi", "DeepFilterNet" veya "Tümünü Karşılaştır".
         alpha: Spektral çıkarma için aşırı çıkarma katsayısı.
+        ref_audio_input: İsteğe bağlı temiz referans ses (Metrik hesaplama için).
 
     Returns:
-        (spectral_wav, wiener_wav, deepfilter_wav, matplotlib_fig, status_message)
+        (spectral_wav, wiener_wav, deepfilter_wav, matplotlib_fig, status_message, metrics_dict)
     """
     try:
         t_start = time.perf_counter()
@@ -176,13 +180,23 @@ def process_audio_pipeline(
             except Exception as e:
                 print(f"[UYARI] DeepFilterNet çalıştırılamadı: {e}")
                 if method == "DeepFilterNet":
-                    return None, None, None, None, f"❌ DeepFilterNet Hatası: {e}"
+                    return None, None, None, None, f"❌ DeepFilterNet Hatası: {e}", {}
 
         # Görselleştirme Grafiği Üret
         fig = create_comparison_plot(
             audio_dict,
             title=f"Karşılaştırmalı Analiz ({', '.join(processed_methods)})"
         )
+
+        # Referans ses verildiyse metrikleri hesapla
+        metrics_dict = {}
+        if ref_audio_input is not None:
+            try:
+                ref_audio, _ = load_input_audio(ref_audio_input, target_sr=sr)
+                for label, (enh_audio, _) in audio_dict.items():
+                    metrics_dict[label] = compute_metrics(ref_audio, enh_audio, sr=sr)
+            except Exception as m_err:
+                print(f"[UYARI] Metrikler hesaplanırken hata: {m_err}")
 
         total_time = time.perf_counter() - t_start
         status_msg = (
@@ -193,9 +207,10 @@ def process_audio_pipeline(
             f"- **Toplam İşlem Süresi:** {total_time:.2f} saniye (RTF: {total_time / duration:.2f})"
         )
 
-        return spectral_out, wiener_out, deepfilter_out, fig, status_msg
+        return spectral_out, wiener_out, deepfilter_out, fig, status_msg, metrics_dict
 
     except Exception as exc:
         import traceback
         traceback.print_exc()
-        return None, None, None, None, f"❌ **Hata Oluştu:** {str(exc)}"
+        return None, None, None, None, f"❌ **Hata Oluştu:** {str(exc)}", {}
+
