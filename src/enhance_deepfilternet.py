@@ -4,8 +4,9 @@ Kullanım (proje kökünden):
     python src/enhance_deepfilternet.py                      # data/noisy -> outputs/deepfilternet
     python src/enhance_deepfilternet.py --input_dir data/noisy_testset_wav --limit 10
 
-run_all.py ile aynı klasör düzenini kullanır: girdi data/noisy (alt klasörler dahil),
-çıktı outputs/deepfilternet/<dosya_adı>.wav
+Girdi klasörünün alt klasör düzenini korur: örneğin
+data/extra_noise_set/noisy/gürültü/12.5dB/dosya.wav,
+outputs/extra_noise/deepfilternet/gürültü/12.5dB/dosya.wav olarak yazılır.
 
 Notlar:
 - DeepFilterNet 48 kHz ile çalışır. Girdi hangi örnekleme frekansında olursa olsun
@@ -56,7 +57,10 @@ def main():
         dt = time.perf_counter() - t0
         if to_out is not None:
             enhanced = to_out(enhanced)
-        torchaudio.save(str(out_dir / f"{f.stem}.wav"), enhanced.cpu(), args.out_sr)
+        output_file = out_dir / f.relative_to(in_dir)
+        output_file = output_file.with_suffix(".wav")
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+        torchaudio.save(str(output_file), enhanced.cpu(), args.out_sr)
 
         dur = audio.shape[-1] / model_sr
         total_audio, total_time = total_audio + dur, total_time + dt

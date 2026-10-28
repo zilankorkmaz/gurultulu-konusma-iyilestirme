@@ -4,7 +4,7 @@ import librosa
 from preprocess import load_audio, save_audio
 
 
-def wiener_filter(audio, sample_rate):
+def wiener_filter(audio, sample_rate, noise_factor=4.0, gain_floor=0.05):
     n_fft = 512
     hop_length = 128
 
@@ -16,7 +16,7 @@ def wiener_filter(audio, sample_rate):
 
     power = np.abs(stft) ** 2
 
-    noise_power = 4.0 * np.percentile(
+    noise_power = noise_factor * np.percentile(
         power,
         20,
         axis=1,
@@ -32,7 +32,7 @@ def wiener_filter(audio, sample_rate):
         estimated_clean_power + noise_power + 1e-10
     )
 
-    gain = np.maximum(gain, 0.05)
+    gain = np.maximum(gain, gain_floor)
 
     enhanced_stft = gain * stft
 

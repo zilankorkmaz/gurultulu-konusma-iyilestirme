@@ -46,10 +46,15 @@ def load(results, testset_log):
     df["file"] = df["file"].astype(str).str.replace(r"\.wav$", "", regex=True)
     if testset_log and not {"noise_type", "snr"} <= set(df.columns):
         rows = []
-        for line in Path(testset_log).read_text(encoding="utf-8").splitlines():
+        for line in Path(testset_log).read_text(encoding="utf-8", errors="ignore").splitlines():
             parts = line.split()
-            if len(parts) >= 3:
-                rows.append((parts[0].replace(".wav", ""), parts[1], float(parts[2])))
+            if len(parts) < 3:
+                continue
+            try:
+                snr = float(parts[-1])
+            except ValueError:
+                continue  # başlık vb. satırları atla
+            rows.append((parts[0].replace(".wav", ""), " ".join(parts[1:-1]), snr))
         meta = pd.DataFrame(rows, columns=["file", "noise_type", "snr"])
         df = df.merge(meta, on="file", how="left")
     missing = [m for m in METRICS if m not in df.columns]
