@@ -16,6 +16,11 @@ TOHUM = 42
 SES_UZANTILARI = {".wav", ".mp3", ".flac", ".ogg", ".m4a"}
 
 
+def noise_name(index):
+    """Gürültü dosyasını loglarda güvenle kullanılacak kısa bir ada çevirir."""
+    return f"noise_{index:02d}"
+
+
 def mix_at_snr(clean, noise, snr_db, rng):
     if len(noise) < len(clean):
         noise = np.tile(noise, int(np.ceil(len(clean) / len(noise))))
@@ -58,25 +63,40 @@ def main():
 
     CIKIS.mkdir(parents=True, exist_ok=True)
     liste_yolu = CIKIS / "dosya_listesi.csv"
+    log_yolu = CIKIS / "log_testset.txt"
 
-    with open(liste_yolu, "w", newline="", encoding="utf-8") as f:
-        yazici = csv.writer(f)
-        yazici.writerow(["dosya", "gurultu", "snr_db"])
+    with (
+        open(liste_yolu, "w", newline="", encoding="utf-8") as csv_file,
+        open(log_yolu, "w", encoding="utf-8") as log_file,
+    ):
+        yazici = csv.writer(csv_file)
+        yazici.writerow(["id", "dosya", "gurultu", "snr_db"])
+        kayit_id = 1
 
-        for g_yol in gurultuler:
+        for g_index, g_yol in enumerate(gurultuler, start=1):
+            gurultu_adi = noise_name(g_index)
             gurultu, _ = load_audio(str(g_yol))
             for snr in SNR_SEVIYELERI:
                 for yol in secilen:
+                    kayit_adi = f"extra_{kayit_id:04d}.wav"
+                    kayit_id += 1
                     temiz_ses, sr = load_audio(str(yol))
                     karisim = mix_at_snr(temiz_ses, gurultu, snr, rng)
-                    hedef = CIKIS / "noisy" / g_yol.stem / f"{snr}dB" / yol.name
+                    hedef = CIKIS / "noisy" / gurultu_adi / f"{snr}dB" / kayit_adi
                     save_audio(str(hedef), karisim, sr)
-                    yazici.writerow(
-                        [hedef.relative_to(CIKIS).as_posix(), g_yol.stem, snr]
-                    )
-            print(f"{g_yol.stem} tamam")
+                    kayit_id_str = hedef.stem
+                    yazici.writerow([
+                        kayit_id_str,
+                        hedef.relative_to(CIKIS).as_posix(),
+                        gurultu_adi,
+                        snr,
+                    ])
+                    log_file.write(f"{kayit_id_str} {gurultu_adi} {snr}\n")
+            print(f"{gurultu_adi} ({g_yol.name}) tamam")
 
     print(f"\nBitti. Sonuçlar: {CIKIS}")
+    print(f"Dosya listesi: {liste_yolu}")
+    print(f"Analiz günlüğü: {log_yolu}")
 
 
 if __name__ == "__main__":
