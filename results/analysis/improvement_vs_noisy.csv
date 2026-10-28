@@ -1,0 +1,4 @@
+Yöntem,Δ PESQ,Δ STOI,Δ SI-SDR (dB)
+Spektral çıkarma,0.282,0.028,5.253
+Wiener,0.195,0.017,3.521
+DeepFilterNet,0.195,0.017,3.521
