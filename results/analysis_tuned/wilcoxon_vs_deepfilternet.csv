@@ -1,0 +1,10 @@
+Karşılaştırma,Ölçüt,Ortalama fark,n,p (Wilcoxon)
+DeepFilterNet vs İşlemsiz,PESQ,1.192,824,1.7309256943626423e-136
+DeepFilterNet vs İşlemsiz,STOI,0.024,824,3.4774764609422835e-89
+DeepFilterNet vs İşlemsiz,SI-SDR (dB),10.472,824,1.841702886223826e-136
+DeepFilterNet vs Spektral çıkarma,PESQ,0.833,824,4.559612295014742e-135
+DeepFilterNet vs Spektral çıkarma,STOI,0.025,824,8.38484382261686e-91
+DeepFilterNet vs Spektral çıkarma,SI-SDR (dB),5.829,824,6.231842578279171e-133
+DeepFilterNet vs Wiener,PESQ,0.854,824,3.411578844644336e-135
+DeepFilterNet vs Wiener,STOI,0.033,824,6.488162674273024e-109
+DeepFilterNet vs Wiener,SI-SDR (dB),4.579,824,4.391176472193424e-131

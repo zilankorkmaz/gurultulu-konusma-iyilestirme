@@ -1,0 +1,7 @@
+,pesq,pesq,pesq,pesq,stoi,stoi,stoi,stoi,si_sdr,si_sdr,si_sdr,si_sdr
+method,deepfilternet,noisy,spectral_subtraction,wiener_filter,deepfilternet,noisy,spectral_subtraction,wiener_filter,deepfilternet,noisy,spectral_subtraction,wiener_filter
+snr,,,,,,,,,,,,
+2.5,2.592,1.419,1.716,1.72,0.912,0.868,0.866,0.854,15.989,0.955,6.184,7.999
+7.5,3.104,1.76,2.165,2.154,0.948,0.919,0.918,0.911,18.427,6.031,11.022,12.626
+12.5,3.322,2.099,2.48,2.452,0.956,0.94,0.939,0.934,19.839,10.918,15.612,16.786
+17.5,3.625,2.599,2.952,2.905,0.966,0.957,0.957,0.953,21.452,15.976,19.623,20.019

@@ -1,0 +1,8 @@
+,pesq,pesq,pesq,pesq,stoi,stoi,stoi,stoi,si_sdr,si_sdr,si_sdr,si_sdr
+method,deepfilternet,noisy,spectral_subtraction,wiener_filter,deepfilternet,noisy,spectral_subtraction,wiener_filter,deepfilternet,noisy,spectral_subtraction,wiener_filter
+noise_type,,,,,,,,,,,,
+bus,3.524,2.481,2.801,2.752,0.962,0.952,0.95,0.946,20.214,8.346,14.463,15.961
+cafe,2.654,1.49,1.769,1.756,0.921,0.877,0.872,0.861,16.657,8.5,11.398,11.958
+living,2.932,1.612,2.029,2.043,0.938,0.904,0.906,0.898,17.578,8.46,13.109,13.911
+office,3.639,2.527,2.943,2.88,0.963,0.958,0.959,0.954,21.311,8.465,13.692,15.892
+psquare,3.05,1.734,2.096,2.102,0.943,0.915,0.912,0.904,18.847,8.455,12.787,13.984
