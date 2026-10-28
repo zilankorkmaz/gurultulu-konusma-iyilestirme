@@ -1,10 +1,4 @@
 Yöntem,Δ PESQ,Δ STOI,Δ SI-SDR (dB)
-<<<<<<< HEAD
-Spektral çıkarma,0.282,0.028,5.253
-Wiener,0.195,0.017,3.521
-DeepFilterNet,0.195,0.017,3.521
-=======
 Spektral çıkarma,0.348,-0.007,5.69
 Wiener,0.265,0.0,3.262
 DeepFilterNet,1.192,0.024,10.472
->>>>>>> 0f7a76094e65f8dd24c37d7cb8876c1b2125ccbf
