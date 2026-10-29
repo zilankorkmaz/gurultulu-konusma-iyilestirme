@@ -16,9 +16,17 @@ TOHUM = 42
 SES_UZANTILARI = {".wav", ".mp3", ".flac", ".ogg", ".m4a"}
 
 
-def noise_name(index):
-    """Gürültü dosyasını loglarda güvenle kullanılacak kısa bir ada çevirir."""
-    return f"noise_{index:02d}"
+NOISE_NAME_MAP = {
+    "noise_01": "people",
+    "noise_02": "classroom",
+    "noise_03": "crowd",
+    "noise_04": "group_talking",
+}
+
+
+def noise_name(path, index):
+    """Gürültüyü tablolar için kısa ve anlamlı bir ada çevirir."""
+    return NOISE_NAME_MAP.get(path.stem, path.stem or f"noise_{index:02d}")
 
 
 def mix_at_snr(clean, noise, snr_db, rng):
@@ -70,11 +78,11 @@ def main():
         open(log_yolu, "w", encoding="utf-8") as log_file,
     ):
         yazici = csv.writer(csv_file)
-        yazici.writerow(["id", "dosya", "gurultu", "snr_db"])
+        yazici.writerow(["id", "dosya", "temiz", "gurultu", "snr_db"])
         kayit_id = 1
 
         for g_index, g_yol in enumerate(gurultuler, start=1):
-            gurultu_adi = noise_name(g_index)
+            gurultu_adi = noise_name(g_yol, g_index)
             gurultu, _ = load_audio(str(g_yol))
             for snr in SNR_SEVIYELERI:
                 for yol in secilen:
@@ -88,6 +96,7 @@ def main():
                     yazici.writerow([
                         kayit_id_str,
                         hedef.relative_to(CIKIS).as_posix(),
+                        yol.name,
                         gurultu_adi,
                         snr,
                     ])
