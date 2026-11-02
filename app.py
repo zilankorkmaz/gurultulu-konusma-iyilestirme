@@ -4,8 +4,14 @@ Gelişmiş Derin Öğrenme (DeepFilterNet) ve Klasik DSP algoritmalarıyla (Wien
 Spektral Çıkarma) ses kayıtlarındaki gürültüleri temizler ve analiz eder.
 """
 
+import asyncio
 import sys
 from pathlib import Path
+
+# Gradio'nun Windows'ta asyncio kilidi oluştururken Proactor döngüsünde
+# takılmasını önler. Bu ayar gradio import edilmeden önce yapılmalıdır.
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 ROOT_DIR = Path(__file__).resolve().parent
 SRC_DIR = ROOT_DIR / "src"
@@ -22,6 +28,22 @@ if str(ROOT_DIR) not in sys.path:
 import gradio as gr
 from pipeline import process_audio_pipeline
 from ui import components as ui_comp
+
+# Bazı Windows/Python 3.11 kurulumlarında Gradio, Blocks oluşturulurken
+# asyncio.get_event_loop() çağrısında socketpair kilidine takılabiliyor.
+# Kilit ve stop event'i kullanım anında zaten doğru event loop'a bağlanabildiği
+# için burada gereksiz loop keşfini atlıyoruz.
+if sys.platform == "win32":
+    def _safe_get_lock_without_loop():
+        return asyncio.Lock()
+
+    def _safe_get_stop_event_without_loop():
+        return asyncio.Event()
+
+    gr.utils.safe_get_lock = _safe_get_lock_without_loop
+    gr.utils.safe_get_stop_event = _safe_get_stop_event_without_loop
+    gr.queueing.safe_get_lock = _safe_get_lock_without_loop
+    gr.queueing.safe_get_stop_event = _safe_get_stop_event_without_loop
 
 
 def load_css() -> str:
@@ -142,7 +164,11 @@ def get_analysis_graphs():
 
 def build_interface():
     """Ana Gradio arayüzünü oluşturur."""
-    with gr.Blocks(title="AudioDenoiser — Ses İyileştirme Platformu") as demo:
+    with gr.Blocks(
+        title="AudioDenoiser — Ses İyileştirme Platformu",
+        theme=gr.themes.Soft(primary_hue="blue", neutral_hue="slate"),
+        css=load_css(),
+    ) as demo:
         # Hero Başlık
         gr.HTML(ui_comp.hero_header())
 
@@ -342,8 +368,8 @@ def build_interface():
 if __name__ == "__main__":
     demo_app = build_interface()
     demo_app.launch(
-        theme=gr.themes.Soft(primary_hue="blue", neutral_hue="slate"),
-        css=load_css(),
+        server_name="127.0.0.1",
         share=False,
-        show_error=True
+        show_error=True,
+        show_api=False,
     )
