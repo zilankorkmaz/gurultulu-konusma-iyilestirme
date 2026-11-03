@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parent
 SRC_DIR = ROOT_DIR / "src"
 DATA_NOISY_DIR = ROOT_DIR / "data" / "noisy"
+DATA_CLEAN_DIR = ROOT_DIR / "data" / "clean"
 CSS_FILE = ROOT_DIR / "assets" / "style.css"
 RESULTS_DIR = ROOT_DIR / "results"
 ANALYSIS_DIR = RESULTS_DIR / "analysis"
@@ -32,12 +33,19 @@ def load_css() -> str:
 
 
 def get_sample_audio_files():
-    """data/noisy klasöründeki VoiceBank örnek ses dosyalarını listeler."""
+    """data/noisy klasöründeki VoiceBank örnek ses dosyalarını ve eşleşen temiz referansları listeler."""
     if not DATA_NOISY_DIR.exists():
         return []
     extensions = {".wav", ".mp3", ".flac", ".ogg", ".m4a"}
     files = sorted(f for f in DATA_NOISY_DIR.rglob("*") if f.suffix.lower() in extensions)
-    return [[str(f)] for f in files[:5]]
+    examples = []
+    for f in files:
+        parts = f.stem.split("_")
+        clean_name = f"{parts[0]}_{parts[1]}.wav" if len(parts) >= 2 else f"{f.stem}.wav"
+        clean_path = DATA_CLEAN_DIR / clean_name
+        ref_val = str(clean_path) if clean_path.exists() else None
+        examples.append([str(f), ref_val])
+    return examples
 
 
 def get_analysis_summary_html() -> str:
@@ -213,8 +221,8 @@ def build_interface():
                         examples = get_sample_audio_files()
                         if examples:
                             with gr.Group(elem_classes=["panel-card"]):
-                                gr.HTML(ui_comp.card_header("📂", "VoiceBank Hızlı Test Kayıtları", "VoiceBank test kümesinden hazırlanmış örnek gürültülü sesler"))
-                                gr.Examples(examples=examples, inputs=[audio_input], label="")
+                                gr.HTML(ui_comp.card_header("📂", "VoiceBank Hızlı Test Kayıtları", "VoiceBank test kümesinden gürültülü ve temiz referans ses çiftleri"))
+                                gr.Examples(examples=examples, inputs=[audio_input, ref_audio_input], label="")
 
                     # ── SAĞ PANEL: Çıktılar ve Grafikler ──
                     with gr.Column(scale=6):
@@ -314,14 +322,14 @@ def build_interface():
                 with gr.Group(elem_classes=["panel-card"]):
                     gr.HTML(ui_comp.card_header("📊", "SNR Seviyesine Göre PESQ & STOI & SI-SDR", "Her giriş SNR değerinde dört yöntemin karşılaştırmalı başarımı"))
                     if snr_img:
-                        gr.Image(value=snr_img, show_label=False, show_download_button=True, elem_classes=["plot-frame"])
+                        gr.Image(value=snr_img, show_label=False, elem_classes=["plot-frame"])
                     else:
                         gr.HTML("<p style='color:#94a3b8; padding:16px;'>Grafik henüz oluşturulmadı.</p>")
 
                 with gr.Group(elem_classes=["panel-card"]):
-                    gr.HTML(ui_comp.card_header("🔈", "Gürültü Türüne Göre PESQ & STOI & SI-SDR", "Cafe, Street, Car ve Babble gürültü türlerinde yöntem başarımları"))
+                    gr.HTML(ui_comp.card_header("🔈", "Gürültü Türüne Göre PESQ & STOI & SI-SDR", "Bus, Cafe, Living, Office ve Psquare gürültü türlerinde yöntem başarımları"))
                     if noise_img:
-                        gr.Image(value=noise_img, show_label=False, show_download_button=True, elem_classes=["plot-frame"])
+                        gr.Image(value=noise_img, show_label=False, elem_classes=["plot-frame"])
                     else:
                         gr.HTML("<p style='color:#94a3b8; padding:16px;'>Grafik henüz oluşturulmadı.</p>")
 

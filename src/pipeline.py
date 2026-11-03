@@ -180,7 +180,7 @@ def process_audio_pipeline(
             except Exception as e:
                 print(f"[UYARI] DeepFilterNet çalıştırılamadı: {e}")
                 if method == "DeepFilterNet":
-                    return None, None, None, None, f"❌ DeepFilterNet Hatası: {e}", {}
+                    return None, None, None, None, "ℹ️ **Bilgilendirme:** DeepFilterNet PyTorch gerektirmektedir. Canlı demo modunda Spektral Çıkarma ve Wiener Filtresi aktiftir.", {}
 
         # Görselleştirme Grafiği Üret
         fig = create_comparison_plot(
@@ -206,6 +206,8 @@ def process_audio_pipeline(
             f"- **Örnekleme Frekansı:** {sr} Hz\n"
             f"- **Toplam İşlem Süresi:** {total_time:.2f} saniye (RTF: {total_time / duration:.2f})"
         )
+        if "DeepFilterNet" not in processed_methods and method in ["Tümünü Karşılaştır"]:
+            status_msg += "\n\n> ℹ️ **Bilgilendirme:** DeepFilterNet PyTorch gerektirmektedir. Canlı demo modunda Spektral Çıkarma ve Wiener Filtresi aktiftir."
 
         return spectral_out, wiener_out, deepfilter_out, fig, status_msg, metrics_dict
 
