@@ -24,6 +24,22 @@ Tek kanallı gürültülü konuşma kayıtlarını iki klasik sinyal işleme yö
 
 Ayrıntılı tablolar ve grafikler: [`results/analysis_tuned/summary.md`](results/analysis_tuned/summary.md) · parametre taraması: [`results/param_sweep/param_sweep.md`](results/param_sweep/param_sweep.md)
 
+### Ek gürültü deneyi (800 kayıt, gerçek ortam gürültüleri)
+
+VoiceBank temiz kayıtlarına classroom, crowd, people ve group_talking gürültüleri 2,5 / 7,5 / 12,5 / 17,5 dB SNR'de eklenerek oluşturulan sette:
+
+| Yöntem | PESQ | STOI | SI-SDR (dB) |
+|---|---|---|---|
+| Spektral çıkarma | 1,67 | 0,828 | 11,43 |
+| Wiener filtresi | 1,64 | 0,838 | 11,15 |
+| **DeepFilterNet3** | **2,23** | **0,877** | **13,73** |
+
+- DeepFilterNet 16 gürültü × SNR durumunun tamamında PESQ'da en iyi yöntem (p < 0,001); farkın en büyük olduğu gürültü classroom.
+- Konuşma benzeri gürültüler (group_talking, classroom) tüm yöntemler için en zor durum; DeepFilterNet'in PESQ'su VoiceBank-DEMAND'e göre 3,16'dan 2,23'e düşüyor.
+- 17,5 dB'de SI-SDR'de klasik yöntemler DeepFilterNet'i geçiyor.
+
+Teknik değerlendirme: [`results/extra_noise_analysis/degerlendirme.md`](results/extra_noise_analysis/degerlendirme.md) · tablolar ve grafikler: [`results/extra_noise_analysis/summary.md`](results/extra_noise_analysis/summary.md)
+
 ---
 
 ## ⚙️ Kurulum
@@ -127,6 +143,11 @@ python src\make_extra_noise_set.py
 python src\run_extra.py
 python src\enhance_deepfilternet.py --input_dir data\extra_noise_set\noisy --output_dir outputs\extra_noise\deepfilternet
 ```
+Ölçütler, özet tablolar ve grafikler (temiz referanslar `dosya_listesi.csv` içindeki `temiz` sütunuyla eşleştirilir → `results/extra_noise_metrics.csv` ve `results/extra_noise_analysis/`):
+```powershell
+python scripts\evaluate_extra_noise.py
+```
+Çıktılar repodan çekildiyse önce ses dosyalarını indirin: `git lfs pull --include "outputs/extra_noise/**"`. Ölçümü tekrarlamadan tablo ve grafikleri yenilemek için `--from_csv` ekleyin.
 
 ---
 
@@ -166,6 +187,7 @@ gurultulu-konusma-iyilestirme/
 │   └── visualization.py           # Dalga formu ve spektrogram çizimi
 ├── scripts/
 │   ├── param_sweep.py             # Klasik yöntemler için parametre taraması
+│   ├── evaluate_extra_noise.py    # Ek gürültü setinin ölçümü, özet tablolar ve grafikler
 │   └── smoke_test.py              # Sentetik veriyle uçtan uca deneme
 ├── results/                       # Sonuç tabloları ve grafikler
 ├── docs/                          # Ek dokümantasyon
